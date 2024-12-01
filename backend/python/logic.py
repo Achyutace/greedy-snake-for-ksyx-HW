@@ -49,7 +49,12 @@ class SnakeGame:
         else:
             return False
     def move(self, direction=None):
+        if self.opp_move(direction):
+            _opp_flag = True
+        else:
+            _opp_flag = False
         # move for a step
+        self.pointplus = False
         if direction:
             if direction == 'U':
                 self.direction = (0, -1)
@@ -59,6 +64,8 @@ class SnakeGame:
                 self.direction = (-1, 0)
             elif direction == 'R':
                 self.direction = (1, 0)
+        if (_opp_flag) and direction:
+            self.direction = (-self.direction[0], -self.direction[1])
         head = self.snake[0]
         new_head = (head[0] + self.direction[0], head[1] + self.direction[1])
 
@@ -72,6 +79,7 @@ class SnakeGame:
 
         if new_head == self.apple:
             self.score += 1
+            self.pointplus = True
             self.apple = self.generate_apple()
         else:
             self.snake.pop()

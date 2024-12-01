@@ -1,11 +1,12 @@
 import tkinter as tk
 
-
+DIFFICUTIES = 1
+DELAY = int(1000/DIFFICUTIES)
 '''
 贪吃蛇游戏的UI界面
 '''
 class GameUI:
-    def __init__(self, game, root):
+    def __init__(self, game, root, ser, hm):
         '''
         parse root: tk的主元件
         parse game: SnakeGame类维护对局的逻辑和数据
@@ -19,11 +20,15 @@ class GameUI:
         self.root = tk.Toplevel(root)
         self.root.title("Snake Game")
         self.game = game
+        self.ser = ser
+        self.hardmode = hm
+        
+
 
         self.frame = tk.Frame(self.root)
         self.frame.pack(fill=tk.BOTH, expand=True)
 
-        self.canvas = tk.Canvas(self.root, width=400, height=400)
+        self.canvas = tk.Canvas(self.root, width=20 * game.width, height=20 * game.height)
         self.canvas.pack()
 
         self.root.bind("<Key>", self.on_key_press)
@@ -41,16 +46,19 @@ class GameUI:
             if not self.game.opp_move(_d):
                 self.game.direction = _d
             else:
-                print("sdfashjkasdghjkahjk")
+                pass
             
 
-
     def update_game_state(self):
-        # renew UI
+        # renew UI, 同时进行与串口的通信
+        # print(self.game.direction)
         self.game.move(self.game.direction)
-        print(self.game.direction)
         game_state = self.game.get_game_state()
         self.canvas.delete("all")
+        # 串口通信
+        
+        if self.game.pointplus and self.hardmode == 1:
+            self.ser.write("A")
 
         # Draw snake
         for segment in game_state['snake']:
@@ -68,11 +76,11 @@ class GameUI:
         self.root.title(f"Snake Game - Score: {game_state['score']}")
 
         if not game_state['game_over']:
-            self.root.after(45, self.update_game_state)
+            self.root.after(DELAY, self.update_game_state)
         else:
-            self.canvas.create_text(200, 200, text="Game Over", font=("Helvetica", 24))
+            self.canvas.create_text(10*self.game.width,10*self.game.height, text="Game Over", font=("Helvetica", 24))
 
-
+    
     def create_game_over(self):
         self.canvas.create_text(200, 200, text="Game Over", font=("Helvetica", 24))
 

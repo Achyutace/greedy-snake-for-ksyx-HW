@@ -9,10 +9,21 @@ from frontend import *
 from backend.python.utils import *
 from backend.python.logic import SnakeGame
 
+HARDMODE = 0    # 硬件模式
+WIDTH = 25
+HEIGHT = 25
+
+if HARDMODE == 1:
+    port = "COM5"
+    ser = Serial(port, 115200, timeout=0)
+
+else:
+    ser = None
+
 class SnakeGameApp:
     def __init__(self, root):
         self.root = root
-        self.game = SnakeGame(20, 20)
+        self.game = SnakeGame(WIDTH, HEIGHT)
         self.show_main_menu()
         self.game_started = False  # 添加一个标志来跟踪游戏是否开始
         self.last_direction = 'R'
@@ -22,6 +33,7 @@ class SnakeGameApp:
             'animation': True,
             'volume': 0
         }
+        self.hardmode = HARDMODE
 
     def show_main_menu(self):
         # 显示主菜单
@@ -31,7 +43,7 @@ class SnakeGameApp:
         # 点击start_game后，调用此函数，开始游戏
         self.game_started = True  # 设置游戏开始标志
         self.game.initialize()
-        self.game_ui = GameUI(game=self.game, root=self.root)
+        self.game_ui = GameUI(game=self.game, root=self.root, ser=ser, hm = self.hardmode)
         
 
     def open_settings(self):
@@ -40,10 +52,21 @@ class SnakeGameApp:
     def save_settings(self):
         # save settings
         
+        # 串口通信
+        '''
+        收到B，切换音量
+        '''
+        if(HARDMODE == 1):
+            if (self.settings_ui.volume_var.get() > 50 
+                and self.settings_config['volume'] < 50) or (
+                    self.settings_ui.volume_var.get() < 50 
+                and self.settings_config['volume'] > 50):
+                ser.write("B")
         self.settings_config = {
             'animation': self.settings_ui.animation_var.get(),
             'volume': self.settings_ui.volume_var.get()
         }
+        
         
         messagebox.showinfo("Settings", "Settings saved successfully!")
 
@@ -55,10 +78,21 @@ class SnakeGameApp:
         self.game.move(direction)
         return self.game.get_game_state()
 
-    def game_loop(self):
+
+    def read_serial(self):
+        c = ser.read()
+        if c in ["NO", "U", "D", "L", "R"]:
+            if c in ["U", "D", "L", "R"] and self.game_started:
+                self.game.direction == c
+        else:
+            print("ERROR! STRING \"",c, "\" is read.")
         pass
+
+
+
 
 root = tk.Tk()
 app = SnakeGameApp(root)
-
+if HARDMODE == 1:
+    app.read_serial()
 root.mainloop()
