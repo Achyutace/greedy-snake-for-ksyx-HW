@@ -16,6 +16,7 @@ class Settings:
         self.back_to_menu_callback = back_to_menu_callback
         
         self.volume = setting_args['volume']
+        self.animation = setting_args['animation']
 
         self.frame = tk.Frame(self.root)
         self.frame.pack(fill=tk.BOTH, expand=True)                            # 整个窗口都是它的
@@ -28,7 +29,7 @@ class Settings:
         self.label.pack(pady=20)
 
         # 显示实时蛇轨迹，迭代2的主要任务
-        self.animation_var = tk.BooleanVar(value=True)
+        self.animation_var = tk.BooleanVar(value=self.animation)
         self.animation_check = tk.Checkbutton(self.frame, text="Show Real-time Animation", variable=self.animation_var)
         self.animation_check.pack(pady=10)
 

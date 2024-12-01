@@ -8,6 +8,7 @@ class MainMenu:
     def __init__(self, root, start_game_callback, open_settings_callback):
         self.root = root
         self.root.title("Snake Game")
+        self.root.geometry("400x200")
         self.start_game_callback = start_game_callback
         self.open_settings_callback = open_settings_callback
 

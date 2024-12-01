@@ -1,11 +1,15 @@
 # Snake_game
 
+## usage
+Step 1: cd path/to/snake_game(path/to需要更改)
+Step 2: pip install -r requirements.txt
+Step 3: 运行main.py，开始游戏吧~
 
 ## 利用Nano板和一些电路元件简易搭建的一个小游戏
 
 ## 电路元件作用如下：
-- SSD1306：显示实时贪吃蛇游戏界面。
-- TM1638：显示当前分数or显示历史分数
+- SSD1306：显示实时贪吃蛇游戏界面。（下个迭代周期再开发（下次一定））
+- TM1638：显示当前分数
 - 双轴摇杆：控制蛇的移动
 - 蜂鸣器：提供音效
 - 

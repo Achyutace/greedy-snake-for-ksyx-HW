@@ -12,19 +12,44 @@ class SnakeGame:
         '''
         self.width = width
         self.height = height
-        self.snake = [(width // 2, height // 2)]
+        self.initialize()
+        
+    def initialize(self):
+        self.snake = [(self.width // 2, self.height // 2), (self.width // 2, (self.height // 2) - 1)]
         self.direction = (0, 1)
         self.apple = self.generate_apple()
         self.score = 0
         self.game_over = False
 
     def generate_apple(self):
+        # generate apple randomly
         while True:
             apple = (random.randint(0, self.width - 1), random.randint(0, self.height - 1))
             if apple not in self.snake:
                 return apple
 
+    def opp_move(self,direction=None):
+        # 判断是不是反方向移动
+        if len(self.snake) == 1:
+            return False
+        if direction:
+            if direction == 'U':
+                self.direction = (0, -1)
+            elif direction == 'D':
+                self.direction = (0, 1)
+            elif direction == 'L':
+                self.direction = (-1, 0)
+            elif direction == 'R':
+                self.direction = (1, 0)
+        head = self.snake[0]
+        _bd = self.snake[1]
+        new_head = (head[0] + self.direction[0], head[1] + self.direction[1])
+        if new_head[0] == _bd[0] and new_head[1] == _bd[1]:
+            return True
+        else:
+            return False
     def move(self, direction=None):
+        # move for a step
         if direction:
             if direction == 'U':
                 self.direction = (0, -1)
@@ -61,6 +86,9 @@ class SnakeGame:
     
 
 class TestSnakeGame(unittest.TestCase):
+    '''
+    测试函数
+    '''
     def setUp(self):
         self.game = SnakeGame(20, 20)
 

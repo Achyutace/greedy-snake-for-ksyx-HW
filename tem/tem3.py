@@ -97,7 +97,7 @@ class GameUI:
         if not game_state['game_over']:
             self.root.after(TIME, self.update_game_state)
         else:
-            self.canvas.create_text(TIME, TIME, text="Game Over", font=("Helvetica", 24))
+            self.canvas.create_text(200, 200, text="Game Over", font=("Helvetica", 24))
 
 def main():
     root = tk.Tk()

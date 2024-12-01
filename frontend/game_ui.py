@@ -27,6 +27,7 @@ class GameUI:
         self.canvas.pack()
 
         self.root.bind("<Key>", self.on_key_press)
+        self.root.focus_set()  # 确保窗口获得焦点
 
         self.update_game_state()
 
@@ -36,13 +37,18 @@ class GameUI:
         key = event.keysym
         
         if key in ['Up', 'Down', 'Left', 'Right']:
-            self.game.direction = {'Up': 'U', 'Down': 'D', 'Left': 'L', 'Right': 'R'}[key]
-
+            _d = {'Up': 'U', 'Down': 'D', 'Left': 'L', 'Right': 'R'}[key]
+            if not self.game.opp_move(_d):
+                self.game.direction = _d
+            else:
+                print("sdfashjkasdghjkahjk")
+            
 
 
     def update_game_state(self):
         # renew UI
         self.game.move(self.game.direction)
+        print(self.game.direction)
         game_state = self.game.get_game_state()
         self.canvas.delete("all")
 
@@ -61,10 +67,16 @@ class GameUI:
         # Update score
         self.root.title(f"Snake Game - Score: {game_state['score']}")
 
+        if not game_state['game_over']:
+            self.root.after(45, self.update_game_state)
+        else:
+            self.canvas.create_text(200, 200, text="Game Over", font=("Helvetica", 24))
+
 
     def create_game_over(self):
         self.canvas.create_text(200, 200, text="Game Over", font=("Helvetica", 24))
 
+    
 
 def test_game_ui_once():
     # 创建一个模拟的游戏状态
