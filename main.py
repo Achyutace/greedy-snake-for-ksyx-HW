@@ -3,13 +3,13 @@ import tkinter as tk
 import keyboard
 from tkinter import messagebox
 from serial import Serial
-
+import turtle
 
 from frontend import *
 from backend.python.utils import *
 from backend.python.logic import SnakeGame
 
-HARDMODE = 0    # 硬件模式
+HARDMODE = 1    # 硬件模式
 WIDTH = 25
 HEIGHT = 25
 
@@ -61,7 +61,7 @@ class SnakeGameApp:
                 and self.settings_config['volume'] < 50) or (
                     self.settings_ui.volume_var.get() < 50 
                 and self.settings_config['volume'] > 50):
-                ser.write("B")
+                ser.write(b'B')
         self.settings_config = {
             'animation': self.settings_ui.animation_var.get(),
             'volume': self.settings_ui.volume_var.get()
@@ -80,19 +80,30 @@ class SnakeGameApp:
 
 
     def read_serial(self):
-        c = ser.read()
-        if c in ["NO", "U", "D", "L", "R"]:
-            if c in ["U", "D", "L", "R"] and self.game_started:
-                self.game.direction == c
+        c = ser.readline()
+        print(c)
+        if(len(c)!=1):
+            turtle.ontimer(self.read_serial, 20)
+            return
+        try:
+            c = c.decode('utf-8')
+        except:
+            turtle.ontimer(self.read_serial, 20)
+            return
+        print(c)
+        if c in ['N', 'U', 'D', 'L', 'R']:
+            if c in ['U', 'D', 'L', 'R'] and self.game_started:
+                self.game.direction = c
+            
         else:
-            print("ERROR! STRING \"",c, "\" is read.")
-        pass
-
+            # print("ERROR! STRING \"",c, "\" is read.")
+            pass
+        turtle.ontimer(self.read_serial, 10)
 
 
 
 root = tk.Tk()
 app = SnakeGameApp(root)
-if HARDMODE == 1:
-    app.read_serial()
+# if HARDMODE == 1:
+#     turtle.ontimer(app.read_serial, 10)
 root.mainloop()

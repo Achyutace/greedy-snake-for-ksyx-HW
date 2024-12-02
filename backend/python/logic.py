@@ -54,7 +54,7 @@ class SnakeGame:
         else:
             _opp_flag = False
         # move for a step
-        self.pointplus = False
+        
         if direction:
             if direction == 'U':
                 self.direction = (0, -1)
@@ -76,7 +76,7 @@ class SnakeGame:
             return
 
         self.snake.insert(0, new_head)
-
+        self.pointplus = False
         if new_head == self.apple:
             self.score += 1
             self.pointplus = True

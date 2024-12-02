@@ -107,7 +107,7 @@ TM1638plus module(STB_PIN,CLK_PIN, DIO_PIN, false);
 // 定义变量
 int displayValue = 0;
 bool isPlayingMusic = false;
-String lastDirection = "";
+char lastDirection = 'U';
 
 // 定义《欢乐颂》的音符和节拍
 int melody[] = 
@@ -123,7 +123,7 @@ int noteDurations[] = {
 
 void setup() {
   // 初始化串口通信
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   // 设置摇杆的引脚模式
   pinMode(VRX_PIN, INPUT);
@@ -159,14 +159,15 @@ void loop() {
   }
 
   // 读取摇杆状态并发送给Python程序
-  String joystickDirection = readJoystickDirection();
-  if (joystickDirection != "") {
+  char joystickDirection = readJoystickDirection();
+  if (joystickDirection != 'S') {
     if (joystickDirection != lastDirection) {
       Serial.println(joystickDirection);
       lastDirection = joystickDirection;
     }
   } else {
-    Serial.println("NO");
+    Serial.println("N");
+    delay(10);
   }
 
   // 如果正在播放音乐，继续播放
@@ -175,21 +176,21 @@ void loop() {
   }
 }
 
-String readJoystickDirection() {
+char readJoystickDirection() {
   int xValue = analogRead(VRX_PIN);
   int yValue = analogRead(VRY_PIN);
 
   if (yValue < 300) {
-    return "U";  // 上
+    return 'U';  // 上
   } else if (yValue > 700) {
-    return "D";  // 下
+    return 'D';  // 下
   } else if (xValue < 300) {
-    return "L";  // 左
+    return 'L';  // 左
   } else if (xValue > 700) {
-    return "R";  // 右
+    return 'R';  // 右
   }
 
-  return "";
+  return 'S';
 }
 
 void playBackgroundMusic() {

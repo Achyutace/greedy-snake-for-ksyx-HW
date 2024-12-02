@@ -5,6 +5,8 @@ Step 1: cd path/to/snake_game(path/to需要更改)
 Step 2: pip install -r requirements.txt
 Step 3: 运行main.py，开始游戏吧~
 
+**目前支持摇杆和键盘操作~**
+
 ## 利用Nano板和一些电路元件简易搭建的一个小游戏
 
 ## 电路元件作用如下：
@@ -29,4 +31,4 @@ Step 3: 运行main.py，开始游戏吧~
 
 ## 后端文件架构如下：
 - logic.py：贪吃蛇逻辑函数
-- main.py：主函数，主要负责调控时钟周期。蛇的速度为1秒n格，n为难度。其实这里的n本质上是n分之1秒一个时钟周期。负责调用UI，硬件通信
+- main.py：一个包括所有部件的类，是程序的中枢

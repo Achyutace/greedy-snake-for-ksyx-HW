@@ -1,10 +1,10 @@
 import tkinter as tk
 
-DIFFICUTIES = 1
+DIFFICUTIES = 3                                 
 DELAY = int(1000/DIFFICUTIES)
 '''
 贪吃蛇游戏的UI界面
-'''
+''' 
 class GameUI:
     def __init__(self, game, root, ser, hm):
         '''
@@ -58,7 +58,7 @@ class GameUI:
         # 串口通信
         
         if self.game.pointplus and self.hardmode == 1:
-            self.ser.write("A")
+            self.ser.write(b"A")
 
         # Draw snake
         for segment in game_state['snake']:
