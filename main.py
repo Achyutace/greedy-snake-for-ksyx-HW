@@ -104,6 +104,6 @@ class SnakeGameApp:
 
 root = tk.Tk()
 app = SnakeGameApp(root)
-# if HARDMODE == 1:
-#     turtle.ontimer(app.read_serial, 10)
+if HARDMODE == 1:
+    turtle.ontimer(app.read_serial, 10)
 root.mainloop()
